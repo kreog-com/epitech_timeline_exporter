@@ -58,4 +58,9 @@ def main():
                 continue
             projects.append(create_proj_from_acti(acti))
 
-    print(json.dumps(projects, indent=4))
+    export = {
+        "promo": year + 5 - ((semester - 1) // 2),
+        "semester": semester,
+        "projects": projects,
+    }
+    print(json.dumps(export, indent=4))
