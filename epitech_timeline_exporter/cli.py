@@ -18,7 +18,8 @@ def main():
 
     if cookie is None:
         print(
-            "EPI_USER_COOKIE has not been set, it is necessary to fetch content from the intranet", file=sys.stderr
+            "EPI_USER_COOKIE has not been set, it is necessary to fetch content from the intranet",
+            file=sys.stderr,
         )
         return 1
 
@@ -26,7 +27,9 @@ def main():
         semester = int(sys.argv[1])
         year = int(sys.argv[2])
     except ValueError:
-        print("Could not get semester or year value, are they numbers?", file=sys.stderr)
+        print(
+            "Could not get semester or year value, are they numbers?", file=sys.stderr
+        )
         return 1
 
     print(f"{semester=} {year=} {cookie=}")
