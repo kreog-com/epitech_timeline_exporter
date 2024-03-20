@@ -1,11 +1,20 @@
+import json
 import sys
 import os
+import requests
+
+
+def create_proj_from_acti(acti):
+    return {
+        "module": " - ".join(acti["module_title"].split(" - ")[1:]),
+        "project": acti["acti_title"].replace("Back To The Future", "BTTF"),
+        "start": acti["begin"].split()[0],
+        "end": acti["end"].split()[0],
+        "bttf": "Back To The Future" in acti["acti_title"],
+    }
 
 
 def main():
-    print("This will do something later...")
-    print(f"Arguments: {sys.argv}")
-
     semester = 4
     year = 2023
     cookie = os.getenv("EPI_USER_COOKIE")
@@ -32,4 +41,21 @@ def main():
         )
         return 1
 
-    print(f"{semester=} {year=} {cookie=}")
+    print(f"{semester=} {year=}", file=sys.stderr)
+
+    url = f"https://intra.epitech.eu/annuel/instance?format=json&semester={semester}&year={year}"
+    fetched_data = requests.get(url, cookies={"user": cookie}).json()
+
+    # No more error handling here, if something crashes after that point good luck
+
+    planning = fetched_data["planning"]
+    projects = []
+    for key_unit, value_unit in planning.items():
+        if "ADM" in key_unit:
+            continue
+        for acti in value_unit:
+            if acti["type_code"] != "proj":
+                continue
+            projects.append(create_proj_from_acti(acti))
+
+    print(json.dumps(projects, indent=4))
